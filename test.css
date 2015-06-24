@@ -1,6 +1,6 @@
 .jacob{
-	width: 200px;
-	height: 80px;
+	width: 500px;
+	height: 200px;
 	background-color: red;
 	-webkit-transform: skew(10deg); /* chrome、safari　*/
 	-moz-transform: skew(10deg); /* firefox　*/
