@@ -8,9 +8,10 @@
 <body>
 	<script src="jquery-2.1.4.min.js"></script>
 	<script src="moveObject.js"></script>
-	<div class="jacob"></div>
-	<div class="jacob2"></div>
-	<div class="jacob3"></div>
+	<div class="needle"></div>
+	<div class="needle2"></div>
+	<div class="needle3"></div>
 	<div id="result"></div>
+	<canvas id="cv" width="400" height="300"></canvas>
 </body>
 </html>

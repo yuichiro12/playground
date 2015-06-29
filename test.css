@@ -1,7 +1,30 @@
 .jacob{
-	width: 500px;
+	width: 200px;
+	max-width: 200px;
 	height: 200px;
+	border-radius: 100px;
 	background-color: red;
-	-webkit-transform: skew(10deg); /* chrome、safari　*/
-	-moz-transform: skew(10deg); /* firefox　*/
+	position: absolute;
+	top: 30%;
+	left: 30%;
+}
+.jacob2{
+	width: 200px;
+	max-width: 200px;
+	height: 200px;
+	border-radius: 100px;
+	background-color: red;
+	position: absolute;
+	top: 30%;
+	left: 30%;
+}
+.jacob3{
+	width: 200px;
+	max-width: 200px;
+	height: 200px;
+	border-radius: 100px;
+	background-color: red;
+	position: absolute;
+	top: 30%;
+	left: 30%;
 }
