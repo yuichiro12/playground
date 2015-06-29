@@ -10,6 +10,11 @@ input.cell{
 
 table.table{
 	border-radius: 2px;
-	border: solid 1px #AAA;
-	background-color: #AAA;
+	border: solid 2px #333;
+	background-color: #333;
+}
+
+table.table-inner{
+	border: none;
+	border-radius: 2px;
 }
