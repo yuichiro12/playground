@@ -1,0 +1,15 @@
+input.cell{
+	/*border-radius: 2px;*/
+	height: 50px;
+	width: 50px;
+	font-size: 32px;
+	border: none;
+	text-align: center;
+	vertical-align: middle;
+}
+
+table.table{
+	border-radius: 2px;
+	border: solid 1px #AAA;
+	background-color: #AAA;
+}
