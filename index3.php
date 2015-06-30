@@ -1,10 +1,18 @@
 <?php
-eval(file_get_contents("database.php"));
+include "database.php";
 
 $nums = "";
+$selectItems = [];
+$fromItems = [];
+$whereItems = [];
+
+
 for($i = 1; $i <= 9; $i++){
 	for($j = 1; $j <= 9; $j++){
+		$label1 = 'R'. $i. 'C'. $j;
+		$item1 = ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : " ";
 		$nums .= ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : " ";
+		array_push($selectItems, $item1. 'AS'. $label1);
 	}
 }
 
@@ -12,16 +20,6 @@ for($i = 1; $i <= 9; $i++){
 
 try{
 	$dbh = new PDO($dsn, $user, $password);
-	$stmt = $dbh->prepare("CALL initialize(?);");
-	$stmt->bindValue(1, $nums, PDO::PARAM_STR);
-	$stmt->execute();
-
-	$stmt = $dbh->prepare("CALL eval(CONCAT('CREATE TABLE tmp',makeSql(0)));");
-	var_dump($stmt->execute());
-	var_dump($stmt->errorInfo());
-	$stmt = $dbh->prepare("CALL extractResult(0);");
-	$stmt->execute();
-	var_dump($stmt->fetch());
 	echo('success');
 }catch (PDOException $e){
 	print('Error:'.$e->getMessage());
