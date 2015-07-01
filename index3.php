@@ -2,6 +2,8 @@
 include "database.php";
 
 $nums = "";
+$maxNum = 9;
+$m = sqrt($maxNum);
 $selectItems = [];
 $fromItems = [];
 $whereItems = [];
@@ -9,12 +11,40 @@ $whereItems = [];
 
 for($i = 1; $i <= 9; $i++){
 	for($j = 1; $j <= 9; $j++){
+		$label1 = "";
+		$label2 = "";
+		$item1 = "";
+		$item2 = "";
+
 		$label1 = 'R'. $i. 'C'. $j;
 		$item1 = ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : " ";
 		$nums .= ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : " ";
-		array_push($selectItems, $item1. 'AS'. $label1);
+		array_push($selectItems, $item1. ' AS '. $label1);
+		if($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9){
+			array_push($fromItems, "nums t". $label1);
+		}
+		for($k = 1; $k <= 9; $k++){
+			for($l = 1; $l <= 9; $l++){
+				if(!($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) || !($_POST["$k-$l"] >= 1 && $_POST["$k-$l"] <= 9)){
+					if(($i !== $k && $j === $l)
+						|| ($i === $k && $j !== $l)
+						|| (($i !== $k && $j !== $l) && ($i / $m === $k / $m) && ($j / $m === $l / $m)){
+						$label2 = 'R'. $k. 'C'. $l;
+						if($_POST["$k-$l"] >= 1 && $_POST["$k-$l"] <= 9){
+							$item2 = $_POST["$k-$l"];
+						}else{
+							$item2 = 't'. $label2. '.n';
+						}
+
+						array_push($whereItems, $item1. "!=". $item2);
+					}
+				}
+			}
+		}
 	}
 }
+
+$sql = "SELECT ". implode(",", $selectItems). " FROM " implode(",", $fromItems). " WHERE ". implode(" AND ", $whereItems);
 
 // $nums=" 4 7 9 5 3 6 3291 4 16387925587 892653147 1 24 68 54 71293";
 
