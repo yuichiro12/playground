@@ -4,11 +4,14 @@ include "database.php";
 $nums = "";
 $maxNum = 9;
 $m = sqrt($maxNum);
+
+// SQL文のパーツを格納する配列
 $selectItems = [];
 $fromItems = [];
 $whereItems = [];
 
 
+// SQL文のパーツを上で用意した配列に格納
 for($i = 1; $i <= 9; $i++){
 	for($j = 1; $j <= 9; $j++){
 		$label1 = "";
@@ -17,10 +20,9 @@ for($i = 1; $i <= 9; $i++){
 		$item2 = "";
 
 		$label1 = 'R'. $i. 'C'. $j;
-		$item1 = ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : " ";
-		$nums .= ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : " ";
+		$item1 = ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : "t${label1}.n";
 		array_push($selectItems, $item1. ' AS '. $label1);
-		if($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9){
+		if(!($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9)){
 			array_push($fromItems, "nums t". $label1);
 		}
 		for($k = 1; $k <= 9; $k++){
@@ -28,7 +30,7 @@ for($i = 1; $i <= 9; $i++){
 				if(!($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) || !($_POST["$k-$l"] >= 1 && $_POST["$k-$l"] <= 9)){
 					if(($i !== $k && $j === $l)
 						|| ($i === $k && $j !== $l)
-						|| (($i !== $k && $j !== $l) && ($i / $m === $k / $m) && ($j / $m === $l / $m)){
+						|| (($i !== $k && $j !== $l) && ($i / $m === $k / $m) && ($j / $m === $l / $m))){
 						$label2 = 'R'. $k. 'C'. $l;
 						if($_POST["$k-$l"] >= 1 && $_POST["$k-$l"] <= 9){
 							$item2 = $_POST["$k-$l"];
@@ -44,17 +46,27 @@ for($i = 1; $i <= 9; $i++){
 	}
 }
 
-$sql = "SELECT ". implode(",", $selectItems). " FROM " implode(",", $fromItems). " WHERE ". implode(" AND ", $whereItems);
-
-// $nums=" 4 7 9 5 3 6 3291 4 16387925587 892653147 1 24 68 54 71293";
-
 try{
 	$dbh = new PDO($dsn, $user, $password);
+	$sql = "SELECT STRAIGHT_JOIN ". implode(",", $selectItems). " FROM ". implode(",", $fromItems). " WHERE ". implode(" AND ", $whereItems);
+	$stmt = $dbh->prepare("DROP TABLE IF EXISTS nums");
+	$stmt->execute();
+	$stmt = $dbh->prepare("CREATE TABLE nums (n INT NOT NULL PRIMARY KEY)");
+	$stmt->execute();
+	$stmt = $dbh->prepare("INSERT INTO nums VALUES (?)");
+	for($i = 1; $i <= $maxNum; $i++){
+		$stmt->bindValue(1, $i, PDO::PARAM_STR);
+		$stmt->execute();
+	}
+	$stmt = $dbh->prepare($sql);
+	var_dump($stmt->execute());
+	var_dump($dbh->errorInfo());
+	var_dump($stmt->fetch());
+
 	echo('success');
 }catch (PDOException $e){
 	print('Error:'.$e->getMessage());
 	die();
-	echo('failed');
 }
 
 $dbh = null;
