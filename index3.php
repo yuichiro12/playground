@@ -1,7 +1,6 @@
 <?php
 include "database.php";
 
-$nums = "";
 $maxNum = 9;
 $m = sqrt($maxNum);
 
@@ -10,6 +9,8 @@ $selectItems = [];
 $fromItems = [];
 $whereItems = [];
 
+// 結果取得用配列
+$result = [];
 
 // SQL文のパーツを上で用意した配列に格納
 for($i = 1; $i <= 9; $i++){
@@ -20,20 +21,20 @@ for($i = 1; $i <= 9; $i++){
 		$item2 = "";
 
 		$label1 = 'R'. $i. 'C'. $j;
-		$item1 = ($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) ? $_POST["$i-$j"] : "t${label1}.n";
+		$item1 = ($_POST[$label1] >= 1 && $_POST[$label1] <= 9) ? $_POST[$label1] : "t${label1}.n";
 		array_push($selectItems, $item1. ' AS '. $label1);
-		if(!($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9)){
+		if(!($_POST[$label1] >= 1 && $_POST[$label1] <= 9)){
 			array_push($fromItems, "nums t". $label1);
 		}
 		for($k = 1; $k <= 9; $k++){
 			for($l = 1; $l <= 9; $l++){
-				if(!($_POST["$i-$j"] >= 1 && $_POST["$i-$j"] <= 9) || !($_POST["$k-$l"] >= 1 && $_POST["$k-$l"] <= 9)){
+				$label2 = 'R'. $k. 'C'. $l;
+				if(!($_POST[$label1] >= 1 && $_POST[$label1] <= 9) || !($_POST[$label2] >= 1 && $_POST[$label2] <= 9)){
 					if(($i !== $k && $j === $l)
 						|| ($i === $k && $j !== $l)
 						|| (($i !== $k && $j !== $l) && ($i / $m === $k / $m) && ($j / $m === $l / $m))){
-						$label2 = 'R'. $k. 'C'. $l;
-						if($_POST["$k-$l"] >= 1 && $_POST["$k-$l"] <= 9){
-							$item2 = $_POST["$k-$l"];
+						if($_POST[$label2] >= 1 && $_POST[$label2] <= 9){
+							$item2 = $_POST[$label2];
 						}else{
 							$item2 = 't'. $label2. '.n';
 						}
@@ -59,19 +60,14 @@ try{
 		$stmt->execute();
 	}
 	$stmt = $dbh->prepare($sql);
-	var_dump($stmt->execute());
-	var_dump($dbh->errorInfo());
-	var_dump($stmt->fetch());
-
-	echo('success');
+	$stmt->execute();
+	$result = $stmt->fetch();
 }catch (PDOException $e){
 	print('Error:'.$e->getMessage());
 	die();
 }
 
 $dbh = null;
-echo($nums);
-
 ?>
 
 <!DOCTYPE html>
@@ -97,7 +93,7 @@ echo($nums);
 						<?php for($k = 0; $k < 3; $k++): ?>
 							<tr>
 							<?php for($l = 0; $l < 3; $l++): ?>
-								<td><input type="text" name="<?php echo(($i*3+$k+1). '-'. ($j*3+$l+1));?>" class="cell" maxlength="1"></td>
+								<td><input type="text" name="<?php echo('R'. ($i*3+$k+1). 'C'. ($j*3+$l+1));?>" class="cell" maxlength="1" value="<?php echo(isset($result['R'. ($i*3+$k+1). 'C'. ($j*3+$l+1)]) ? $result['R'. ($i*3+$k+1). 'C'. ($j*3+$l+1)] : '');?>"></td>
 							<?php endfor; ?>
 							</tr>
 						<?php endfor; ?>
