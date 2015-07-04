@@ -1,8 +1,10 @@
 <?php
 include "database.php";
 
+$prob = $_POST;
+
 $maxNum = 9;
-$m = sqrt($maxNum);
+$m = (int) sqrt($maxNum);
 
 // SQL文のパーツを格納する配列
 $selectItems = [];
@@ -21,20 +23,20 @@ for($i = 1; $i <= 9; $i++){
 		$item2 = "";
 
 		$label1 = 'R'. $i. 'C'. $j;
-		$item1 = ($_POST[$label1] >= 1 && $_POST[$label1] <= 9) ? $_POST[$label1] : "t${label1}.n";
+		$item1 = ($prob[$label1] >= 1 && $prob[$label1] <= 9) ? $prob[$label1] : "t${label1}.n";
 		array_push($selectItems, $item1. ' AS '. $label1);
-		if(!($_POST[$label1] >= 1 && $_POST[$label1] <= 9)){
+		if(!($prob[$label1] >= 1 && $prob[$label1] <= 9)){
 			array_push($fromItems, "nums t". $label1);
 		}
 		for($k = 1; $k <= 9; $k++){
 			for($l = 1; $l <= 9; $l++){
 				$label2 = 'R'. $k. 'C'. $l;
-				if(!($_POST[$label1] >= 1 && $_POST[$label1] <= 9) || !($_POST[$label2] >= 1 && $_POST[$label2] <= 9)){
+				if(!($prob[$label1] >= 1 && $prob[$label1] <= 9) || !($prob[$label2] >= 1 && $prob[$label2] <= 9)){
 					if(($i !== $k && $j === $l)
 						|| ($i === $k && $j !== $l)
-						|| (($i !== $k && $j !== $l) && ($i / $m === $k / $m) && ($j / $m === $l / $m))){
-						if($_POST[$label2] >= 1 && $_POST[$label2] <= 9){
-							$item2 = $_POST[$label2];
+						|| (($i !== $k && $j !== $l) && (int)(($i - 1) / $m) === (int)(($k - 1) / $m) && (int)(($j - 1) / $m) === (int)(($l - 1) / $m))){
+						if($prob[$label2] >= 1 && $prob[$label2] <= 9){
+							$item2 = $prob[$label2];
 						}else{
 							$item2 = 't'. $label2. '.n';
 						}
@@ -78,9 +80,11 @@ $dbh = null;
 	<link rel="stylesheet" type="text/css" href="test3.css">
 </head>
 <body>
+<script src="jquery-2.1.4.min.js"></script>
+<script src="numcolor.js"></script>
 <form action="/playground/index3.php" method="POST">
 <input type="submit">
-<input type="reset">
+<button>リセット</button>
 <hr>
 	<table class="table">
 		<tbody class="table">

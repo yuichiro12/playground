@@ -1,3 +1,8 @@
+body{
+	font-family: courier;
+}
+
+
 input.cell{
 	height: 35px;
 	width: 35px;
@@ -11,6 +16,7 @@ table.table{
 	border-radius: 4px;
 	border: solid 2px #333;
 	background-color: #333;
+	margin: 50px;
 }
 
 table.table-inner{
