@@ -8,7 +8,7 @@ $(document).ready(function(){
 	})
 });
 
-window.addEventListener('DOMContentLoaded',　function() {
+window.addEventListener('DOMContentLoaded', function() {
 	if (HTMLCanvasElement) {
 		var cv = document.querySelector('#cv');
 		var c = cv.getContext('2d');
