@@ -1,7 +1,7 @@
 from math import log, sqrt
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import beta, norm
+import scipy.stats as stats
 import pandas as pd
 from pandas import DataFrame, Series, date_range
 
@@ -10,7 +10,7 @@ from pandas import DataFrame, Series, date_range
 a = 2
 b = 2
 x = np.linspace(0, 1, 100) #x軸
-y = beta.pdf(x, a, b)      #y軸
+y = stats.beta.pdf(x, a, b)      #y軸
 
 plt.plot(x, y)
 
@@ -18,7 +18,7 @@ plt.plot(x, y)
 
 ## 計算
 x = np.linspace(-4, 4, 100) #x軸
-y = norm.pdf(x)
+y = stats.norm.pdf(x)
 
 plt.plot(x, y)
 
@@ -31,7 +31,7 @@ class Slot:
 		self.exp = exp
 
 	def run(self) -> float:
-		return norm.rvs(self.exp)
+		return stats.norm.rvs(self.exp)
 
 
 slots = Slot(0), Slot(0.5), Slot(1), Slot(1.5), Slot(2)
@@ -84,10 +84,25 @@ def ucb() -> None:
 
 ucb()
 
-
-def thompson_sampling() -> None:
-	scores = [0 for _ in slots]
+def gaussian_thompson_sampling() -> None:
+	scores = [{"score": 0, "num": 0} for _ in slots]
 	score = 0
-	pass
+	a = 50000
+	b = 50000
+	n, m = 0, 0
+	for i in range(T):
+		rands = []
+		for slot in slots:
+			rands.append(stats.invgamma(a=a+m, b=b-m))
+		
+		slots[np.argmax(rands)].run()
+
+		n += 1
+		m += 2
+
+			
+		
+			
+		
 
 # %%
