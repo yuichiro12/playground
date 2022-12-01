@@ -101,8 +101,5 @@ def gaussian_thompson_sampling() -> None:
 		m += 2
 
 			
-		
-			
-		
-
 # %%
+
