@@ -10,8 +10,9 @@ python = "^3.10"
 pandas = "^1.5.0"
 numpy = "^1.23.4"
 jupyter = "^1.0.0"
-matplotlib = "^3.6.1"
 scipy = "^1.9.2"
+matplotlib = "^3.6.2"
+ffmpeg-python = "^0.2.0"
 
 
 [build-system]
